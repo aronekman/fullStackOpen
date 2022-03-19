@@ -1,24 +1,33 @@
-import { useState } from "react";
+import { useState } from 'react';
+
+const StatisticLine = (props) => {
+  return (
+    <p>
+      {props.text} {props.value}
+    </p>
+  );
+};
 
 const Statistics = (props) => {
   const all = () => props.good + props.neutral + props.bad;
-  if (all() > 0) {
-    const average = () => (props.good - props.bad) / all();
-    const positive = () => (props.good * 100) / all();
-    return (
-      <>
-        <p>good {props.good}</p>
-        <p>neutral {props.neutral}</p>
-        <p>bad {props.bad}</p>
-        <p>all {all()}</p>
-        <p>average {average()}</p>
-        <p>positive {positive()} %</p>
-      </>
-    );
-  } else {
-    return <p>No feedback given</p>;
-  }
+  if (all() === 0) return <p>No feedback given</p>;
+  const average = () => (props.good - props.bad) / all();
+  const positive = () => (props.good * 100) / all();
+  return (
+    <>
+      <StatisticLine text="good" value={props.good} />
+      <StatisticLine text="neutral" value={props.neutral} />
+      <StatisticLine text="bad" value={props.bad} />
+      <StatisticLine text="all" value={all()} />
+      <StatisticLine text="average" value={average()} />
+      <StatisticLine text="positive" value={positive() + ' %'} />
+    </>
+  );
 };
+
+const Button = (props) => (
+  <button onClick={props.handleClick}>{props.text}</button>
+);
 
 const App = () => {
   // save clicks of each button to its own state
@@ -28,9 +37,9 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <button onClick={() => setGood(good + 1)}>good</button>
-      <button onClick={() => setNeutral(neutral + 1)}>neutral</button>
-      <button onClick={() => setBad(bad + 1)}>bad</button>
+      <Button handleClick={() => setGood(good + 1)} text="good" />
+      <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
+      <Button handleClick={() => setBad(bad + 1)} text="bad" />
       <h2>Statistics</h2>
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
