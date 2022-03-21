@@ -24,8 +24,6 @@ const App = () => {
     copy[selected] += 1;
     setPoints(copy);
     setMostVotes(copy[selected] > points[mostVotes] ? selected : mostVotes);
-    console.log(mostVotes);
-    console.log(points);
   };
 
   return (
