@@ -11,6 +11,7 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
     setPersons(persons.concat({ name: newName }));
+    setNewName('');
   };
 
   return (
