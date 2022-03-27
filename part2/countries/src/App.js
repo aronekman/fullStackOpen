@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import CountryData from './CountryData';
 
-function App() {
+const Search = ({ value, onChange }) => (
+  <div>
+    find countries <input value={value} onChange={onChange} />
+  </div>
+);
+
+const App = () => {
+  const [searchValue, setSearchValue] = useState('');
+  const [countryData, setCountryData] = useState([]);
+  const [filteredList, setFilteredList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('https://restcountries.com/v3.1/all')
+      .then((response) => setCountryData(response.data));
+  }, []);
+
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchValue(value);
+    if (value) {
+      setFilteredList(
+        countryData.filter((country) =>
+          country.name.common.toLowerCase().includes(value.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredList([]);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Search value={searchValue} onChange={handleSearch} />
+      <CountryData countries={filteredList} />
     </div>
   );
-}
+};
 
 export default App;
