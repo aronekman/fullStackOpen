@@ -28,11 +28,11 @@ const PersonForm = ({
 );
 
 const Persons = ({ persons }) =>
-  persons.map((person) => <SinglePerson person={person} />);
+  persons.map((person) => <SinglePerson person={person} key={person.name} />);
 
 const SinglePerson = ({ person }) => {
   return (
-    <div key={person.name}>
+    <div>
       {person.name} {person.number}
     </div>
   );
