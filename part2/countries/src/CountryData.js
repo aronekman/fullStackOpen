@@ -5,25 +5,27 @@ const Country = ({ country }) => (
     <div>{`area ${country.area}`}</div>
     <h4>languages:</h4>
     <ul>
-      {Object.values(country.languages).map((language) => (
-        <li>{language}</li>
+      {Object.entries(country.languages).map(([key, value]) => (
+        <li key={key}>{value}</li>
       ))}
     </ul>
     <img src={country.flags.svg} alt={'flag'} width={200} />
   </div>
 );
 
-const CountryData = ({ countries }) => {
+const CountryData = ({ countries, setCountries }) => {
   if (countries.length > 10) {
     return <div>Too many matches, specify another filter</div>;
   } else if (countries.length === 1) {
-    console.log(countries[0]);
     return <Country country={countries[0]} />;
   } else {
     return (
       <>
         {countries.map((country) => (
-          <div key={country.fifa}>{country.name.common}</div>
+          <div key={country.fifa}>
+            {country.name.common}
+            <button onClick={() => setCountries([country])}>show</button>
+          </div>
         ))}
       </>
     );

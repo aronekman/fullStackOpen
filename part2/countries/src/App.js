@@ -32,11 +32,12 @@ const App = () => {
       setFilteredList([]);
     }
   };
+  
 
   return (
     <div>
       <Search value={searchValue} onChange={handleSearch} />
-      <CountryData countries={filteredList} />
+      <CountryData countries={filteredList} setCountries={setFilteredList} />
     </div>
   );
 };
