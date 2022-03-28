@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import personService from './services/persons';
 
 const Filter = ({ filter, handleChangeFilter }) => (
   <div>
@@ -27,13 +27,20 @@ const PersonForm = ({
   </form>
 );
 
-const Persons = ({ persons }) =>
-  persons.map((person) => <SinglePerson person={person} key={person.name} />);
+const Persons = ({ persons, handleDelete }) =>
+  persons.map((person) => (
+    <SinglePerson
+      person={person}
+      handleDelete={handleDelete}
+      key={person.name}
+    />
+  ));
 
-const SinglePerson = ({ person }) => {
+const SinglePerson = ({ person, handleDelete }) => {
   return (
     <div>
-      {person.name} {person.number}
+      {person.name} {person.number}{' '}
+      <button onClick={() => handleDelete(person.id)}>delete</button>
     </div>
   );
 };
@@ -46,15 +53,63 @@ const App = () => {
 
   const [filteredPersons, setFilteredPersons] = useState(persons);
 
-  const handleNameChange = (event) => {
-    setNewName(event.target.value);
+  const handleNameChange = (event) => setNewName(event.target.value);
+
+  const handleNumberChange = (event) => setNewNumber(event.target.value);
+
+  const handleChangeFilter = (event) => setFilter(event.target.value);
+
+  const addPerson = (event) => {
+    event.preventDefault();
+    const person = persons.find((person) => person.name === newName);
+    if (person) {
+      if (
+        window.confirm(
+          `${person.name} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const updatedPerson = { ...person, number: newNumber };
+        personService
+          .update(person.id, updatedPerson)
+          .then((returnedPerson) =>
+            setPersons(
+              persons.map((p) => (p.id !== person.id ? p : returnedPerson))
+            )
+          );
+      }
+      setNewName('');
+      setNewNumber('');
+      return;
+    }
+    if (newName) {
+      const person = {
+        name: newName,
+        number: newNumber,
+      };
+      personService.add(person).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName('');
+        setNewNumber('');
+      });
+    }
   };
 
-  const handleNumberChange = (event) => {
-    setNewNumber(event.target.value);
+  const deletePerson = (id) => {
+    if (
+      window.confirm(
+        `Delete ${persons.find((person) => person.id === id).name} ?`
+      )
+    ) {
+      personService.deletePerson(id);
+      setPersons(persons.filter((person) => person.id !== id));
+    }
   };
 
-  const filterPersons = (filter) => {
+  useEffect(() => {
+    personService.getAll().then((initialPersons) => setPersons(initialPersons));
+  }, []);
+
+  useEffect(() => {
     if (filter) {
       setFilteredPersons(
         persons.filter((p) =>
@@ -64,35 +119,7 @@ const App = () => {
     } else {
       setFilteredPersons(persons);
     }
-  };
-
-  const handleChangeFilter = (event) => {
-    const filter = event.target.value;
-    setFilter(filter);
-    filterPersons(event.target.value);
-  };
-
-  const addPerson = (event) => {
-    event.preventDefault();
-    if (persons.some((person) => person.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`);
-      return;
-    }
-    if (newName) {
-      setPersons(persons.concat({ name: newName, number: newNumber }));
-      setFilteredPersons(persons.concat({ name: newName, number: newNumber }));
-      setFilter('');
-    }
-    setNewName('');
-    setNewNumber('');
-  };
-
-  useEffect(() => {
-    axios.get('http://localhost:3001/persons').then((response) => {
-      setPersons(response.data);
-      setFilteredPersons(response.data);
-    });
-  }, []);
+  }, [filter, persons]);
 
   return (
     <div>
@@ -107,7 +134,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} handleDelete={deletePerson} />
     </div>
   );
 };
