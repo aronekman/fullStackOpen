@@ -45,11 +45,20 @@ const SinglePerson = ({ person, handleDelete }) => {
   );
 };
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null;
+  }
+
+  return <div className="error">{message}</div>;
+};
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [message, setMessage] = useState(null);
 
   const [filteredPersons, setFilteredPersons] = useState(persons);
 
@@ -71,11 +80,15 @@ const App = () => {
         const updatedPerson = { ...person, number: newNumber };
         personService
           .update(person.id, updatedPerson)
-          .then((returnedPerson) =>
+          .then((returnedPerson) => {
             setPersons(
               persons.map((p) => (p.id !== person.id ? p : returnedPerson))
-            )
-          );
+            );
+            setMessage(`Updated ${returnedPerson.name}`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+          });
       }
       setNewName('');
       setNewNumber('');
@@ -90,6 +103,10 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName('');
         setNewNumber('');
+        setMessage(`Added ${returnedPerson.name}`);
+        setTimeout(() => {
+          setMessage(null);
+        }, 5000);
       });
     }
   };
@@ -124,6 +141,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter filter={filter} handleChangeFilter={handleChangeFilter} />
       <h3>add a new</h3>
       <PersonForm
