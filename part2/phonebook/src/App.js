@@ -45,12 +45,12 @@ const SinglePerson = ({ person, handleDelete }) => {
   );
 };
 
-const Notification = ({ message }) => {
+const Notification = ({ message, messageColor }) => {
   if (message === null) {
     return null;
   }
 
-  return <div className="error">{message}</div>;
+  return <div className={`error ${messageColor}`}>{message}</div>;
 };
 
 const App = () => {
@@ -59,6 +59,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
   const [message, setMessage] = useState(null);
+  const [messageColor, setMessageColor] = useState('green');
 
   const [filteredPersons, setFilteredPersons] = useState(persons);
 
@@ -84,7 +85,17 @@ const App = () => {
             setPersons(
               persons.map((p) => (p.id !== person.id ? p : returnedPerson))
             );
+            setMessageColor('green');
             setMessage(`Updated ${returnedPerson.name}`);
+            setTimeout(() => {
+              setMessage(null);
+            }, 5000);
+          })
+          .catch((error) => {
+            setMessageColor('red');
+            setMessage(
+              `Information of ${person.name} has alreade been removed from server`
+            );
             setTimeout(() => {
               setMessage(null);
             }, 5000);
@@ -103,6 +114,7 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName('');
         setNewNumber('');
+        setMessageColor('green');
         setMessage(`Added ${returnedPerson.name}`);
         setTimeout(() => {
           setMessage(null);
@@ -141,7 +153,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} />
+      <Notification message={message} messageColor={messageColor} />
       <Filter filter={filter} handleChangeFilter={handleChangeFilter} />
       <h3>add a new</h3>
       <PersonForm
