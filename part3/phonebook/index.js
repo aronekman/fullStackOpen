@@ -1,4 +1,3 @@
-const { response, request } = require('express');
 const express = require('express');
 const app = express();
 
@@ -53,6 +52,28 @@ app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
   persons = persons.filter((p) => p.id !== id);
   response.status(204).end();
+});
+
+app.post('/api/persons', (request, response) => {
+  console.log('je');
+  const body = request.body;
+  if (!body.name) {
+    return response.status(400).json({
+      error: 'name missing',
+    });
+  }
+  if (!body.number) {
+    return response.status(400).json({
+      error: 'number missing',
+    });
+  }
+  const person = {
+    id: Math.floor(Math.random() * 100000),
+    name: body.name,
+    number: body.number,
+  };
+  persons = persons.concat(person);
+  response.json(person);
 });
 
 const PORT = 3001;
