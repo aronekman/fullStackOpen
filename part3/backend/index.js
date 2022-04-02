@@ -1,10 +1,11 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const app = express();
 
 app.use(express.json());
-
+app.use(cors());
 morgan.token('person', function (req, res) {
   return req.method === 'POST' ? JSON.stringify(req.body) : ' ';
 });
@@ -68,6 +69,7 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body;
+  console.log(body);
   if (!body.name) {
     return response.status(400).json({ error: 'name missing' });
   }
