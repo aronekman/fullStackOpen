@@ -2,7 +2,6 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const Person = require('./models/person');
-const { response, request } = require('express');
 require('dotenv').config();
 
 const app = express();
@@ -42,21 +41,25 @@ app.post('/api/persons', (request, response) => {
 
 app.get('/info', (request, response) => {
   const date = new Date();
-  const personsAmount = persons.length;
-  response.send(`
-  <div>Phonebook has info for ${personsAmount} people</div>
-  <div>${date}</div>
-  `);
+  Person.find({}).then((persons) => {
+    response.send(`
+    <div>Phonebook has info for ${persons.length} people</div>
+    <div>${date}</div>
+    `);
+  });
 });
 
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id);
-  const person = persons.find((p) => p.id === id);
-  if (person) {
-    response.json(person);
-  } else {
-    response.status(404).end();
-  }
+  Person.findById(request.params.id)
+    .then((person) => {
+      if (person) {
+        response.json(person);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => next(error));
 });
 
 app.put('/api/persons/:id', (request, response, next) => {
