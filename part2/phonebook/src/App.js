@@ -1,170 +1,111 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import Filter from './components/Filter';
+import PersonForm from './components/PersonForm';
+import Persons from './components/Persons';
+import Notification from './components/Notification';
 import personService from './services/persons';
-
-const Filter = ({ filter, handleChangeFilter }) => (
-  <div>
-    filter shown with <input value={filter} onChange={handleChangeFilter} />
-  </div>
-);
-
-const PersonForm = ({
-  addPerson,
-  newName,
-  handleNameChange,
-  newNumber,
-  handleNumberChange,
-}) => (
-  <form onSubmit={addPerson}>
-    <div>
-      name: <input value={newName} onChange={handleNameChange} />
-    </div>
-    <div>
-      number: <input value={newNumber} onChange={handleNumberChange} />
-    </div>
-    <div>
-      <button type="submit">add</button>
-    </div>
-  </form>
-);
-
-const Persons = ({ persons, handleDelete }) =>
-  persons.map((person) => (
-    <SinglePerson
-      person={person}
-      handleDelete={handleDelete}
-      key={person.name}
-    />
-  ));
-
-const SinglePerson = ({ person, handleDelete }) => {
-  return (
-    <div>
-      {person.name} {person.number}{' '}
-      <button onClick={() => handleDelete(person.id)}>delete</button>
-    </div>
-  );
-};
-
-const Notification = ({ message, messageColor }) => {
-  if (message === null) {
-    return null;
-  }
-
-  return <div className={`error ${messageColor}`}>{message}</div>;
-};
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
-  const [message, setMessage] = useState(null);
-  const [messageColor, setMessageColor] = useState('green');
+  const [notification, setNotification] = useState(null);
 
-  const [filteredPersons, setFilteredPersons] = useState(persons);
+  useEffect(() => {
+    personService.getAll().then((persons) => {
+      setPersons(persons);
+    });
+  }, []);
 
-  const handleNameChange = (event) => setNewName(event.target.value);
-
-  const handleNumberChange = (event) => setNewNumber(event.target.value);
-
-  const handleChangeFilter = (event) => setFilter(event.target.value);
+  const notify = (message, type = 'info') => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
 
   const addPerson = (event) => {
     event.preventDefault();
-    const person = persons.find((person) => person.name === newName);
-    if (person) {
-      if (
-        window.confirm(
-          `${person.name} is already added to phonebook, replace the old number with a new one?`
-        )
-      ) {
-        const updatedPerson = { ...person, number: newNumber };
+    const newPerson = {
+      name: newName,
+      number: newNumber,
+    };
+
+    setNewName('');
+    setNewNumber('');
+
+    const existingPerson = persons.find((p) => p.name === newPerson.name);
+    if (existingPerson) {
+      const ok = window.confirm(
+        `${existingPerson.name} is already added to phonebook, update the number?`
+      );
+      if (ok) {
         personService
-          .update(person.id, updatedPerson)
-          .then((returnedPerson) => {
+          .update(existingPerson.id, { ...existingPerson, number: newNumber })
+          .then((savedPerson) => {
             setPersons(
-              persons.map((p) => (p.id !== person.id ? p : returnedPerson))
+              persons.map((p) => (p.id === existingPerson.id ? savedPerson : p))
             );
-            setMessageColor('green');
-            setMessage(`Updated ${returnedPerson.name}`);
-            setTimeout(() => {
-              setMessage(null);
-            }, 5000);
+            notify(`Updated info of ${savedPerson.name}`);
           })
           .catch((error) => {
-            setMessageColor('red');
-            setMessage(
-              `Information of ${person.name} has alreade been removed from server`
+            notify(
+              `the person '${existingPerson.name}' was had already been from the server`,
+              'alert'
             );
-            setTimeout(() => {
-              setMessage(null);
-            }, 5000);
+            setPersons(persons.filter((p) => p.id !== existingPerson.id));
           });
+
+        return;
       }
-      setNewName('');
-      setNewNumber('');
-      return;
     }
-    if (newName) {
-      const person = {
-        name: newName,
-        number: newNumber,
-      };
-      personService.add(person).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setNewName('');
-        setNewNumber('');
-        setMessageColor('green');
-        setMessage(`Added ${returnedPerson.name}`);
-        setTimeout(() => {
-          setMessage(null);
-        }, 5000);
+
+    personService
+      .create(newPerson)
+      .then((savedPerson) => {
+        setPersons(persons.concat(savedPerson));
+        notify(`Added ${savedPerson.name}`);
+      })
+      .catch((error) => {
+        notify(error.response.data.error, 'alert');
+      });
+  };
+
+  const deletePerson = (id) => {
+    const toDelete = persons.find((p) => p.id === id);
+    const ok = window.confirm(`Delete ${toDelete.name}`);
+    if (ok) {
+      personService.remove(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+        notify(`Deleted ${toDelete.name}`);
       });
     }
   };
 
-  const deletePerson = (id) => {
-    if (
-      window.confirm(
-        `Delete ${persons.find((person) => person.id === id).name} ?`
-      )
-    ) {
-      personService.deletePerson(id);
-      setPersons(persons.filter((person) => person.id !== id));
-    }
-  };
-
-  useEffect(() => {
-    personService.getAll().then((initialPersons) => setPersons(initialPersons));
-  }, []);
-
-  useEffect(() => {
-    if (filter) {
-      setFilteredPersons(
-        persons.filter((p) =>
+  const personsToShow =
+    filter.length === 0
+      ? persons
+      : persons.filter((p) =>
           p.name.toLowerCase().includes(filter.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredPersons(persons);
-    }
-  }, [filter, persons]);
+        );
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={message} messageColor={messageColor} />
-      <Filter filter={filter} handleChangeFilter={handleChangeFilter} />
-      <h3>add a new</h3>
-      <PersonForm
-        addPerson={addPerson}
-        newName={newName}
-        handleNameChange={handleNameChange}
-        newNumber={newNumber}
-        handleNumberChange={handleNumberChange}
+      <Notification notification={notification} />
+      <Filter
+        value={filter}
+        handleChange={({ target }) => setFilter(target.value)}
       />
-      <h3>Numbers</h3>
-      <Persons persons={filteredPersons} handleDelete={deletePerson} />
+      <PersonForm
+        name={newName}
+        number={newNumber}
+        handleNameChange={({ target }) => setNewName(target.value)}
+        handleNumberChange={({ target }) => setNewNumber(target.value)}
+        addPerson={addPerson}
+      />
+      <Persons persons={personsToShow} handleDelete={deletePerson} />
     </div>
   );
 };
