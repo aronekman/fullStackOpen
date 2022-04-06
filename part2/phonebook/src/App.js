@@ -51,7 +51,6 @@ const App = () => {
           })
           .catch((error) => {
             notify(error.response.data.error, 'alert');
-            setPersons(persons.filter((p) => p.id !== existingPerson.id));
           });
 
         return;
