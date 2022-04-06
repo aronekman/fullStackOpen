@@ -50,10 +50,7 @@ const App = () => {
             notify(`Updated info of ${savedPerson.name}`);
           })
           .catch((error) => {
-            notify(
-              `the person '${existingPerson.name}' was had already been from the server`,
-              'alert'
-            );
+            notify(error.response.data.error, 'alert');
             setPersons(persons.filter((p) => p.id !== existingPerson.id));
           });
 
