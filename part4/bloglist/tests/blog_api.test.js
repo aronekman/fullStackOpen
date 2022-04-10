@@ -5,6 +5,7 @@ const app = require('../app');
 
 const api = supertest(app);
 const Blog = require('../models/blog');
+const { add } = require('lodash');
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -64,6 +65,30 @@ describe('post a blog', () => {
       url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
       likes: 2,
     });
+  });
+
+  test('likes property will default to 0 if missing', async () => {
+    const newBlog = {
+      _id: '5a422ba71b54a676234d17fb',
+      title: 'TDD harms architecture',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+      __v: 0,
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+    const addedBlog = blogsAtEnd.find(
+      blog => blog.id === '5a422ba71b54a676234d17fb'
+    );
+    expect(addedBlog.likes).toBe(0);
   });
 });
 
