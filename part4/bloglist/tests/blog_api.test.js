@@ -28,11 +28,42 @@ describe('get all blogs', () => {
     expect(response.body).toHaveLength(helper.initialBlogs.length);
   });
 
-  test('a specific blog is within the returned blogs', async () => {
+  test('unique identifier property of the blog posts is named id', async () => {
     const response = await api.get('/api/blogs');
-    const titles = response.body.map(r => r.title);
+    const blogs = response.body;
+    blogs.map(blog => {
+      expect(blog.id).toBeDefined();
+    });
+  });
+});
 
-    expect(titles).toContain('Go To Statement Considered Harmful');
+describe('post a blog', () => {
+  test('a valid blog can be added ', async () => {
+    const newBlog = {
+      _id: '5a422bc61b54a676234d17fc',
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      likes: 2,
+      __v: 0,
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+    expect(blogsAtEnd).toContainEqual({
+      id: '5a422bc61b54a676234d17fc',
+      title: 'Type wars',
+      author: 'Robert C. Martin',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+      likes: 2,
+    });
   });
 });
 
