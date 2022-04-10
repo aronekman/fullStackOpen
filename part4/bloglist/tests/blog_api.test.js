@@ -5,17 +5,13 @@ const app = require('../app');
 
 const api = supertest(app);
 const Blog = require('../models/blog');
-const { add } = require('lodash');
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  for (let blog of helper.initialBlogs) {
-    let blogObject = new Blog(blog);
-    await blogObject.save();
-  }
+  await Blog.insertMany(helper.initialBlogs);
 });
 
-describe('get all blogs', () => {
+describe('when there is initially some blogs saved', () => {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -38,8 +34,8 @@ describe('get all blogs', () => {
   });
 });
 
-describe('post a blog', () => {
-  test('a valid blog can be added ', async () => {
+describe('addition of a new blog', () => {
+  test('succeeds with valid data', async () => {
     const newBlog = {
       _id: '5a422bc61b54a676234d17fc',
       title: 'Type wars',
@@ -91,7 +87,7 @@ describe('post a blog', () => {
     expect(addedBlog.likes).toBe(0);
   });
 
-  test('if title and url properties missing, respond with 400', async () => {
+  test('fails with status code 400 if data title and url are missing', async () => {
     const newBlog = {
       _id: '5a422bc61b54a676234d17fc',
       author: 'Robert C. Martin',
@@ -101,6 +97,23 @@ describe('post a blog', () => {
     await api.post('/api/blogs').send(newBlog).expect(400);
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+});
+
+describe('deletion of a note', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+
+    const titles = blogsAtEnd.map(r => r.title);
+
+    expect(titles).not.toContain(blogToDelete.title);
   });
 });
 
