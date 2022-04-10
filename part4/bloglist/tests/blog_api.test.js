@@ -100,7 +100,7 @@ describe('addition of a new blog', () => {
   });
 });
 
-describe('deletion of a note', () => {
+describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
@@ -114,6 +114,29 @@ describe('deletion of a note', () => {
     const titles = blogsAtEnd.map(r => r.title);
 
     expect(titles).not.toContain(blogToDelete.title);
+  });
+});
+
+describe('updating a blog', () => {
+  test('succeeds with valid data', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
+    const newBlog = {
+      title: blogToUpdate.title,
+      author: blogToUpdate.author,
+      url: blogToUpdate.url,
+      likes: blogToUpdate.likes + 10,
+    };
+
+    await api.put(`/api/blogs/${blogToUpdate.id}`).send(newBlog).expect(200);
+
+    const blogsAtEnd = await helper.blogsInDb();
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+
+    const updatedBlog = blogsAtEnd.find(r => r.id === blogToUpdate.id);
+
+    expect(updatedBlog.likes).toBe(newBlog.likes);
   });
 });
 
