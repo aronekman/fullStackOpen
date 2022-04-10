@@ -69,10 +69,10 @@ describe('post a blog', () => {
 
   test('likes property will default to 0 if missing', async () => {
     const newBlog = {
-      _id: '5a422ba71b54a676234d17fb',
-      title: 'TDD harms architecture',
+      _id: '5a422bc61b54a676234d17fc',
+      title: 'Type wars',
       author: 'Robert C. Martin',
-      url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+      url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
       __v: 0,
     };
 
@@ -86,9 +86,21 @@ describe('post a blog', () => {
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
     const addedBlog = blogsAtEnd.find(
-      blog => blog.id === '5a422ba71b54a676234d17fb'
+      blog => blog.id === '5a422bc61b54a676234d17fc'
     );
     expect(addedBlog.likes).toBe(0);
+  });
+
+  test('if title and url properties missing, respond with 400', async () => {
+    const newBlog = {
+      _id: '5a422bc61b54a676234d17fc',
+      author: 'Robert C. Martin',
+      __v: 0,
+    };
+
+    await api.post('/api/blogs').send(newBlog).expect(400);
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
   });
 });
 
