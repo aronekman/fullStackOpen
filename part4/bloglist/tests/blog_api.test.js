@@ -54,7 +54,7 @@ describe('addition of a new blog', () => {
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
-    expect(blogsAtEnd).toContainEqual({
+    expect(blogsAtEnd).toContain({
       id: '5a422bc61b54a676234d17fc',
       title: 'Type wars',
       author: 'Robert C. Martin',
