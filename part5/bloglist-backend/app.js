@@ -8,7 +8,11 @@ require('express-async-errors');
 const blogsRouter = require('./controllers/blogs');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
-const { errorHandler, userExtractor } = require('./utils/middleware');
+const {
+  requestLogger,
+  errorHandler,
+  userExtractor,
+} = require('./utils/middleware');
 const logger = require('./utils/logger');
 
 logger.info('connecting to', config.MONGODB_URI);
@@ -26,10 +30,13 @@ app.use(cors());
 app.use(express.static('build'));
 app.use(express.json());
 
+app.use(requestLogger);
+
 app.use('/api/login', loginRouter);
 app.use('/api/blogs', userExtractor, blogsRouter);
 app.use('/api/users', usersRouter);
 
 app.use(errorHandler);
+app.use(requestLogger);
 
 module.exports = app;
