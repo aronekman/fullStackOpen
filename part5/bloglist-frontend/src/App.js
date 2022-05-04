@@ -32,6 +32,14 @@ const App = () => {
     }
   }, []);
 
+  const setNotification = (message, type) => {
+    setNotificationMessage(message);
+    setNotificationType(type);
+    setTimeout(() => {
+      setNotificationMessage(null);
+    }, 5000);
+  };
+
   const handleLogin = async event => {
     event.preventDefault();
     try {
@@ -45,11 +53,7 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch (e) {
-      setNotificationMessage('wrong username or password');
-      setNotificationType('error');
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 5000);
+      setNotification('wrong username or password', 'error');
     }
   };
 
@@ -60,19 +64,12 @@ const App = () => {
       blogFormRef.current.toggleVisibility();
       const returnedBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat(returnedBlog));
-      setNotificationMessage(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      setNotification(
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+        'success'
       );
-      setNotificationType('success');
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 5000);
     } catch (e) {
-      setNotificationMessage('failed to add blog');
-      setNotificationType('error');
-      setTimeout(() => {
-        setNotificationMessage(null);
-      }, 5000);
+      setNotification('failed to add blog', 'error');
     }
   };
 
