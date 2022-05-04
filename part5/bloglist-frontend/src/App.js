@@ -74,6 +74,18 @@ const App = () => {
     }
   };
 
+  const updateBlog = async blog => {
+    try {
+      const updatedBlog = await blogService.update(blog);
+      setBlogs(blogs.map(b => (b.id === blog.id ? updatedBlog : b)));
+    } catch (e) {
+      setNotification(
+        `Note '${blog.title}' was already removed from server`,
+        'error'
+      );
+    }
+  };
+
   const handleLogout = () => {
     window.localStorage.clear();
     setUser(null);
@@ -103,7 +115,7 @@ const App = () => {
             <BlogForm createBlog={createBlog} />
           </Togglable>
           {blogs.map(blog => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
           ))}
         </div>
       )}
