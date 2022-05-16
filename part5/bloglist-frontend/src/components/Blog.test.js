@@ -1,13 +1,13 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
-
 import { render, screen } from '@testing-library/react';
 import Blog from './Blog';
 
 describe('<Blog />', () => {
-  const mockUpdate = jest.fn();
+  let mockUpdate;
   beforeEach(() => {
+    mockUpdate = jest.fn();
     const blog = {
       title: 'Test title',
       author: 'Test author',
