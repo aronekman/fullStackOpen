@@ -6,6 +6,7 @@ import { render, screen } from '@testing-library/react';
 import Blog from './Blog';
 
 describe('<Blog />', () => {
+  const mockUpdate = jest.fn();
   beforeEach(() => {
     const blog = {
       title: 'Test title',
@@ -17,7 +18,7 @@ describe('<Blog />', () => {
       },
     };
 
-    render(<Blog blog={blog} />);
+    render(<Blog blog={blog} updateBlog={mockUpdate} />);
   });
 
   test('renders the blogs title and author', () => {
@@ -37,5 +38,17 @@ describe('<Blog />', () => {
 
     expect(screen.getByText('testUrl.com')).toBeDefined();
     expect(screen.getByText('likes 0')).toBeDefined();
+  });
+
+  test('like button calls updateBlog Function', async () => {
+    const user = userEvent.setup();
+    const viewButton = screen.getByText('view');
+    await user.click(viewButton);
+
+    const likeButton = screen.getByText('like');
+    await user.click(likeButton);
+    await user.click(likeButton);
+
+    expect(mockUpdate.mock.calls).toHaveLength(2);
   });
 });
