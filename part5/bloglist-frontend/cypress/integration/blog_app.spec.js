@@ -26,14 +26,36 @@ describe('Blog app', function () {
     });
 
     it('fails with wrong credentials', function () {
-      cy.get('#username').type('admin');
-      cy.get('#password').type('admin');
+      cy.get('#username').type('root');
+      cy.get('#password').type('wrong password');
       cy.get('#login-button').click();
       cy.contains('wrong username or password').should(
         'have.css',
         'color',
         'rgb(255, 0, 0)'
       );
+    });
+  });
+
+  describe('when logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: 'root', password: 'root' });
+    });
+    it('A blog can be created', function () {
+      cy.contains('new blog').click();
+      cy.get('#title-input').type('test book');
+      cy.get('#author-input').type('test author');
+      cy.get('#url-input').type('testUrl.com');
+      cy.get('form').contains('create').click();
+      cy.contains('a new blog test book by test author added').should(
+        'have.css',
+        'color',
+        'rgb(0, 128, 0)'
+      );
+      cy.contains('test book test author');
+      cy.contains('view').click();
+      cy.contains('testUrl.com');
+      cy.contains('likes 0');
     });
   });
 });
