@@ -8,6 +8,7 @@ const notificationSlice = createSlice({
       state.push(action.payload);
     },
     removeNotification(state, action) {
+      console.log('je');
       state.shift();
     },
   },
@@ -17,11 +18,11 @@ export const { createNotification, removeNotification } =
   notificationSlice.actions;
 
 export const setNotification = (message, displayTime) => {
-  return async dispatch => {
+  return dispatch => {
     dispatch(createNotification(message));
     setTimeout(() => {
-      removeNotification();
-    }, displayTime * 100);
+      dispatch(removeNotification());
+    }, displayTime * 1000);
   };
 };
 
