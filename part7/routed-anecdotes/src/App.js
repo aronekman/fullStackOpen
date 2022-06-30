@@ -7,6 +7,8 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import Anecdote from './components/Anecdote';
+import AnecdoteForm from './components/AnecdoteForm';
+import { useField } from './hooks';
 const Menu = () => {
   const padding = {
     paddingRight: 5,
@@ -72,57 +74,6 @@ const Footer = () => (
   </div>
 );
 
-const CreateNew = props => {
-  const navigate = useNavigate();
-  const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
-  const [info, setInfo] = useState('');
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    props.addNew({
-      content,
-      author,
-      info,
-      votes: 0,
-    });
-    navigate('/');
-  };
-
-  return (
-    <div>
-      <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input
-            name="content"
-            value={content}
-            onChange={e => setContent(e.target.value)}
-          />
-        </div>
-        <div>
-          author
-          <input
-            name="author"
-            value={author}
-            onChange={e => setAuthor(e.target.value)}
-          />
-        </div>
-        <div>
-          url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={e => setInfo(e.target.value)}
-          />
-        </div>
-        <button>create</button>
-      </form>
-    </div>
-  );
-};
-
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -171,7 +122,7 @@ const App = () => {
       <span>{notification}</span>
       <Routes>
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-        <Route path="create" element={<CreateNew addNew={addNew} />} />
+        <Route path="create" element={<AnecdoteForm addNew={addNew} />} />
         <Route path="about" element={<About />} />
         <Route
           path="/anecdotes/:id"
