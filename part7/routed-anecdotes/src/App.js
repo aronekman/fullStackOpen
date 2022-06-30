@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-
+import Anecdote from './components/Anecdote';
 const Menu = () => {
   const padding = {
     paddingRight: 5,
@@ -25,7 +25,9 @@ const AnecdoteList = ({ anecdotes }) => (
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map(anecdote => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}>
+          <Link to={`anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
       ))}
     </ul>
   </div>
@@ -159,6 +161,10 @@ const App = () => {
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path="create" element={<CreateNew addNew={addNew} />} />
         <Route path="about" element={<About />} />
+        <Route
+          path="/anecdotes/:id"
+          element={<Anecdote anecdotes={anecdotes} />}
+        />
       </Routes>
       <Footer />
     </Router>
