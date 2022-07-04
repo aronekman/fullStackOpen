@@ -1,14 +1,7 @@
 import { useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Anecdote from './components/Anecdote';
 import AnecdoteForm from './components/AnecdoteForm';
-import { useField } from './hooks';
 const Menu = () => {
   const padding = {
     paddingRight: 5,
