@@ -19,10 +19,12 @@ const useCountry = name => {
   const [country, setCountry] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`https://restcountries.com/v3.1/name/${name}?fullText=true`)
-      .then(response => setCountry(response.data[0]))
-      .catch(() => setCountry(null));
+    if (name) {
+      axios
+        .get(`https://restcountries.com/v3.1/name/${name}?fullText=true`)
+        .then(response => setCountry(response.data[0]))
+        .catch(() => setCountry(null));
+    }
   }, [name]);
 
   return country;
