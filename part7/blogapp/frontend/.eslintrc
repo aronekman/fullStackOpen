@@ -9,9 +9,9 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["prettier", "react", "jest", "cypress"],
+  "plugins": ["react", "jest", "cypress"],
   "rules": {
-    "prettier/prettier": ["error"],
+    "no-unused-vars": ["warn"],
     "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
