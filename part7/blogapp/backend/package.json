@@ -25,6 +25,7 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "eslint": "^8.24.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-jest": "^27.0.4",
     "nodemon": "^2.0.15",
     "prettier": "2.7.1",
