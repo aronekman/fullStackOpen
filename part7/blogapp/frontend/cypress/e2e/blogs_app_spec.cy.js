@@ -4,7 +4,7 @@ describe('Note ', function () {
     cy.create_user({
       name: 'Matti Luukkainen',
       username: 'mluukkai',
-      password: 'salainen',
+      password: 'salainen'
     });
 
     cy.visit('http://localhost:3000');
@@ -64,7 +64,7 @@ describe('Note ', function () {
         title: 'Authenticate faster in tests with the cy.session command',
         author:
           'https://www.cypress.io/blog/2021/08/04/authenticate-faster-in-tests-cy-session-command/',
-        url: 'https://www.cypress.io/blog/2021/08/04/authenticate-faster-in-tests-cy-session-command/',
+        url: 'https://www.cypress.io/blog/2021/08/04/authenticate-faster-in-tests-cy-session-command/'
       });
 
       /*
@@ -93,14 +93,12 @@ describe('Note ', function () {
       cy.create_user({
         name: 'Kalle Ilves',
         username: 'ilves',
-        password: 'lynx',
+        password: 'lynx'
       });
 
       cy.contains('logout').click();
 
       cy.log_in('ilves', 'lynx');
-
-      
 
       cy.contains('view').click();
       cy.contains('remove').should('not.exist');
@@ -114,18 +112,18 @@ describe('Note ', function () {
       cy.create_blog({
         title: 'blog A',
         author: 'Antti',
-        url: 'http://aaa.fi',
+        url: 'http://aaa.fi'
       });
       cy.create_blog({
         title: 'blog B',
         author: 'Bettiina',
-        url: 'http://aaa.fi',
+        url: 'http://aaa.fi'
       });
 
       cy.create_blog({
         title: 'blog C',
         author: 'Cecilia',
-        url: 'http://ccc.fi',
+        url: 'http://ccc.fi'
       });
 
       cy.get('#notification').should('not.exist');
@@ -140,27 +138,27 @@ describe('Note ', function () {
       cy.contains('blog C').contains('like').as('like_c');
 
       cy.get('@like_a').click();
-      cy.contains(`you liked 'blog A'`);
+      cy.contains("you liked 'blog A'");
       cy.get('#notification').should('not.exist');
 
       cy.get('@like_b').click();
-      cy.contains(`you liked 'blog B'`);
+      cy.contains("you liked 'blog B'");
       cy.get('#notification').should('not.exist');
 
       cy.get('@like_b').click();
-      cy.contains(`you liked 'blog B'`);
+      cy.contains("you liked 'blog B'");
       cy.get('#notification').should('not.exist');
 
       cy.get('@like_c').click();
-      cy.contains(`you liked 'blog C'`);
+      cy.contains("you liked 'blog C'");
       cy.get('#notification').should('not.exist');
 
       cy.get('@like_c').click();
-      cy.contains(`you liked 'blog C'`);
+      cy.contains("you liked 'blog C'");
       cy.get('#notification').should('not.exist');
 
       cy.get('@like_c').click();
-      cy.contains(`you liked 'blog C'`);
+      cy.contains("you liked 'blog C'");
       cy.get('#notification').should('not.exist');
 
       cy.get('.blog').then(blogs => {

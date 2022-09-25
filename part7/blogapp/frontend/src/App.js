@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
@@ -32,7 +32,7 @@ const App = () => {
     loginService
       .login({
         username,
-        password,
+        password
       })
       .then(user => {
         setUser(user);
@@ -87,7 +87,7 @@ const App = () => {
     const liked = {
       ...toLike,
       likes: (toLike.likes || 0) + 1,
-      user: toLike.user.id,
+      user: toLike.user.id
     };
 
     blogService.update(liked.id, liked).then(updatedBlog => {

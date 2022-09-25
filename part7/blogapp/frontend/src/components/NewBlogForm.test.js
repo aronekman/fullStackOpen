@@ -12,7 +12,7 @@ it('when blog is created, callback has correct data', () => {
     author: 'Kalle Ilves',
     title: 'Testing is pretty easy',
     url: 'https://testing-library.com/docs/react-testing-library/intro/',
-    likes: 0,
+    likes: 0
   };
 
   const authorInput = screen.getByPlaceholderText('author of the blog');
