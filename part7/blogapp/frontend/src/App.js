@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
+import BlogDetails from './components/BlogDetails';
 
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
@@ -45,6 +46,7 @@ const App = () => {
             />
             <Route path="/users" element={<UserList />} />
             <Route path="/users/:id" element={<UserDetails />} />
+            <Route path="/blogs/:id" element={<BlogDetails />} />
           </Routes>
         </>
       ) : (
