@@ -12,6 +12,14 @@ const blogSlice = createSlice({
     },
     appendBlog(state, action) {
       state.push(action.payload);
+    },
+    removeBlog(state, action) {
+      return state.filter(blog => blog.id !== String(action.payload));
+    },
+    updateBlog(state, action) {
+      return state.map(blog =>
+        blog.id === action.payload.id ? action.payload : blog
+      );
     }
   }
 });
@@ -37,7 +45,7 @@ export const createBlog = blog => {
     } catch (error) {
       dispatch(
         createNotification(
-          'creating a blog failed: ' + error.response.data.error,
+          `creating a blog failed: ${error.response.data.error}`,
           'alert'
         )
       );
@@ -45,5 +53,43 @@ export const createBlog = blog => {
   };
 };
 
-export const { setBlogs, appendBlog } = blogSlice.actions;
+export const deleteBlog = blog => {
+  return async dispatch => {
+    await blogService.remove(blog.id);
+    dispatch(removeBlog(blog.id));
+    dispatch(
+      createNotification(
+        `blog ${blog.title} by ${blog.author} removed succesfully`
+      )
+    );
+  };
+};
+
+export const likeBlog = blog => {
+  return async dispatch => {
+    try {
+      const updatedBlog = await blogService.update(blog.id, {
+        ...blog,
+        likes: blog.likes + 1,
+        user: blog.user.id
+      });
+      dispatch(updateBlog(updatedBlog));
+      dispatch(
+        createNotification(
+          `you liked '${updatedBlog.title}' by ${updatedBlog.author}`
+        )
+      );
+    } catch (error) {
+      dispatch(
+        createNotification(
+          `liking blog failed: ${error.response.data.error}`,
+          'alert'
+        )
+      );
+    }
+  };
+};
+
+export const { setBlogs, appendBlog, removeBlog, updateBlog } =
+  blogSlice.actions;
 export default blogSlice.reducer;

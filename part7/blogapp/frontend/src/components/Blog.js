@@ -1,22 +1,38 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+import { deleteBlog, likeBlog } from '../reducers/blogReducer';
 
-const BlogDetails = ({ blog, visible, likeBlog, removeBlog, own }) => {
-  if (!visible) return null;
+const BlogDetails = ({ blog, own }) => {
+  const dispatch = useDispatch();
+  const { title, author, url, likes } = blog;
 
-  const addedBy = blog.user && blog.user.name ? blog.user.name : 'anonymous';
+  const addedBy = blog.user?.name ? blog.user.name : 'anonymous';
+
+  const handleRemove = () => {
+    const ok = window.confirm(`remove '${title}' by ${author}?`);
+
+    if (!ok) {
+      return;
+    }
+    dispatch(deleteBlog(blog));
+  };
+
+  const handleLike = () => {
+    dispatch(likeBlog(blog));
+  };
 
   return (
     <div>
       <div>
-        <a href={blog.url}>{blog.url}</a>
+        <a href={url}>{url}</a>
       </div>
       <div>
-        {blog.likes} likes
-        <button onClick={() => likeBlog(blog.id)}>like</button>
+        {likes} likes
+        <button onClick={handleLike}>like</button>
       </div>
       {addedBy}
-      {own && <button onClick={() => removeBlog(blog.id)}>remove</button>}
+      {own && <button onClick={handleRemove}>remove</button>}
     </div>
   );
 };
@@ -26,7 +42,7 @@ const Blog = ({ blog }) => {
 
   const style = {
     padding: 3,
-    margin: 5,
+    marginBlock: 5,
     borderStyle: 'solid',
     borderWidth: 1
   };
@@ -37,13 +53,15 @@ const Blog = ({ blog }) => {
       <button onClick={() => setVisible(!visible)}>
         {visible ? 'hide' : 'view'}
       </button>
-      <BlogDetails
-        blog={blog}
-        visible={visible}
-        likeBlog={() => {} /*likeBlog*/}
-        removeBlog={() => {} /*removeBlog*/}
-        own={blog.user /*&& user.username === blog.user.username*/}
-      />
+      {visible && (
+        <BlogDetails
+          blog={blog}
+          visible={visible}
+          likeBlog={() => {} /*likeBlog*/}
+          removeBlog={() => {} /*removeBlog*/}
+          own={blog.user /*&& user.username === blog.user.username*/}
+        />
+      )}
     </div>
   );
 };
@@ -61,9 +79,7 @@ Blog.propTypes = {
   }).isRequired,
   user: PropTypes.shape({
     username: PropTypes.string.isRequired
-  }),
-  likeBlog: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired
+  })
 };
 
 export default Blog;

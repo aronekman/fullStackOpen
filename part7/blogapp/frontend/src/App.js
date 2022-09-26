@@ -48,44 +48,6 @@ const App = () => {
     dispatch(createNotification('good bye!'));
   };
 
-  /*const removeBlog = id => {
-    const toRemove = blogs.find(b => b.id === id);
-
-    const ok = window.confirm(
-      `remove '${toRemove.title}' by ${toRemove.author}?`
-    );
-
-    if (!ok) {
-      return;
-    }
-
-    blogService.remove(id).then(() => {
-      const updatedBlogs = blogs.filter(b => b.id !== id).sort(byLikes);
-      setBlogs(updatedBlogs);
-    });
-  };*/
-
-  /*const likeBlog = async id => {
-    const toLike = blogs.find(b => b.id === id);
-    const liked = {
-      ...toLike,
-      likes: (toLike.likes || 0) + 1,
-      user: toLike.user.id
-    };
-
-    blogService.update(liked.id, liked).then(updatedBlog => {
-      dispatch(
-        createNotification(
-          `you liked '${updatedBlog.title}' by ${updatedBlog.author}`
-        )
-      );
-      const updatedBlogs = blogs
-        .map(b => (b.id === id ? updatedBlog : b))
-        .sort(byLikes);
-      setBlogs(updatedBlogs);
-    });
-  };*/
-
   if (user === null) {
     return (
       <>
