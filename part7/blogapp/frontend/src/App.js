@@ -6,6 +6,7 @@ import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
 import NewBlogForm from './components/NewBlogForm';
 import Notification from './components/Notification';
+import UserDetails from './components/UserDetails';
 import UserList from './components/UserList';
 import { initializeAuth, logOut } from './reducers/authReducer';
 import { initilizeBlogs } from './reducers/blogReducer';
@@ -19,7 +20,7 @@ const App = () => {
     dispatch(initilizeBlogs());
     dispatch(initializeAuth());
     dispatch(initializeUsers());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div>
@@ -43,6 +44,7 @@ const App = () => {
               }
             />
             <Route path="/users" element={<UserList />} />
+            <Route path="/users/:id" element={<UserDetails />} />
           </Routes>
         </>
       ) : (
