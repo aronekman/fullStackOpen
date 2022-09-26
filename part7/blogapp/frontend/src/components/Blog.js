@@ -21,7 +21,7 @@ const BlogDetails = ({ blog, visible, likeBlog, removeBlog, own }) => {
   );
 };
 
-const Blog = ({ blog, likeBlog, removeBlog, user }) => {
+const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false);
 
   const style = {
@@ -40,9 +40,9 @@ const Blog = ({ blog, likeBlog, removeBlog, user }) => {
       <BlogDetails
         blog={blog}
         visible={visible}
-        likeBlog={likeBlog}
-        removeBlog={removeBlog}
-        own={blog.user && user.username === blog.user.username}
+        likeBlog={() => {} /*likeBlog*/}
+        removeBlog={() => {} /*removeBlog*/}
+        own={blog.user /*&& user.username === blog.user.username*/}
       />
     </div>
   );
