@@ -12,13 +12,13 @@ router.post('/', async (request, response) => {
 
   if (!(user && passwordCorrect)) {
     return response.status(401).json({
-      error: 'invalid username or password',
+      error: 'invalid username or password'
     });
   }
 
   const userForToken = {
     username: user.username,
-    id: user._id,
+    id: user._id
   };
 
   const token = jwt.sign(userForToken, process.env.SECRET);

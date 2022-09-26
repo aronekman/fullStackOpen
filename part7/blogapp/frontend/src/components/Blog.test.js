@@ -32,9 +32,9 @@ describe('blog', () => {
     expect(likesElement).toBeNull();
   });
 
-  test('when expanded also url and like rendered', () => {
+  test('when expanded also url and like rendered', async () => {
     const showButton = screen.getByText('view');
-    userEvent.click(showButton);
+    await userEvent.click(showButton);
 
     const urlElement = screen.getByText('http://lynx.fi/testing');
     expect(urlElement).toBeDefined();
@@ -43,13 +43,13 @@ describe('blog', () => {
     expect(likesElement).toBeDefined();
   });
 
-  test('when liked twice, handler is called twice', () => {
+  test('when liked twice, handler is called twice', async () => {
     const showButton = screen.getByText('view');
-    userEvent.click(showButton);
+    await userEvent.click(showButton);
 
     const likeButton = screen.getByText('like');
-    userEvent.click(likeButton);
-    userEvent.click(likeButton);
+    await userEvent.click(likeButton);
+    await userEvent.click(likeButton);
 
     expect(onLike.mock.calls).toHaveLength(2);
   });

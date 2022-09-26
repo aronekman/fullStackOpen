@@ -11,7 +11,7 @@ const loginRouter = require('./controllers/login');
 const {
   errorHandler,
   userExtractor,
-  requestLogger,
+  requestLogger
 } = require('./utils/middleware');
 const logger = require('./utils/logger');
 

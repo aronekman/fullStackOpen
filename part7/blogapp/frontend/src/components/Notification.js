@@ -1,9 +1,13 @@
 import React from 'react';
 
-const Notification = ({ notification }) => {
-  if (notification === null) {
-    return null;
-  }
+import { useSelector } from 'react-redux';
+
+const Notification = () => {
+  const notification = useSelector(({ notifications }) =>
+    notifications.length > 0 ? notifications[notifications.length - 1] : null
+  );
+
+  if (!notification) return null;
 
   const style = {
     color: notification.type === 'alert' ? 'red' : 'green',
