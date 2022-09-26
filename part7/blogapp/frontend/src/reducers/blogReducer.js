@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import blogService from '../services/blogs';
-import { toggleBlogFormVisibility } from './appReducer';
 import { createNotification } from './notificationReducer';
 
 const blogSlice = createSlice({
@@ -31,7 +30,7 @@ export const initilizeBlogs = () => {
   };
 };
 
-export const createBlog = blog => {
+export const createBlog = (blog, toggleVisibility) => {
   return async dispatch => {
     try {
       const newBlog = await blogService.create(blog);
@@ -41,7 +40,7 @@ export const createBlog = blog => {
           `a new blog '${newBlog.title}' by ${newBlog.author} added`
         )
       );
-      dispatch(toggleBlogFormVisibility());
+      toggleVisibility();
     } catch (error) {
       dispatch(
         createNotification(

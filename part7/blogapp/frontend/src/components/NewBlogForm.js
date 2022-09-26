@@ -7,19 +7,25 @@ const NewBlogForm = () => {
   const [title, setTitle] = useState('');
   const [author, setAuthor] = useState('');
   const [url, setUrl] = useState('');
+  const [visible, setVisible] = useState(false);
 
   const handleSubmit = event => {
     event.preventDefault();
-    dispatch(createBlog({ title, author, url, likes: 0 }));
+    dispatch(
+      createBlog({ title, author, url, likes: 0 }, () => setVisible(false))
+    );
     setAuthor('');
     setTitle('');
     setUrl('');
   };
 
+  if (!visible) {
+    return <button onClick={() => setVisible(true)}>new note</button>;
+  }
+
   return (
     <div>
-      <h2>Create new</h2>
-
+      <h2 style={{ marginBlock: 5 }}>Create new</h2>
       <form onSubmit={handleSubmit}>
         <div>
           title
@@ -52,6 +58,7 @@ const NewBlogForm = () => {
           create
         </button>
       </form>
+      <button onClick={() => setVisible(false)}>cancel</button>
     </div>
   );
 };
