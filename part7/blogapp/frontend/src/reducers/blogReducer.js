@@ -91,6 +91,22 @@ export const likeBlog = blog => {
   };
 };
 
+export const createComment = (id, comment) => {
+  return async dispatch => {
+    try {
+      const updatedBlog = await blogService.comment(id, comment);
+      dispatch(updateBlog(updatedBlog));
+    } catch (error) {
+      dispatch(
+        createNotification(
+          `commenting blog failed: ${error.response.data.error}`,
+          'alert'
+        )
+      );
+    }
+  };
+};
+
 export const { setBlogs, appendBlog, removeBlog, updateBlog } =
   blogSlice.actions;
 export default blogSlice.reducer;

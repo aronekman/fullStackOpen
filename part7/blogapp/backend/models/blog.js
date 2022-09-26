@@ -14,7 +14,8 @@ const schema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }
+  },
+  comments: [{ type: String, required: [true, "comment can't be blanc"] }]
 });
 
 schema.set('toJSON', {

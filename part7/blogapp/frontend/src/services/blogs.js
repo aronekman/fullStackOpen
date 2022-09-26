@@ -11,9 +11,9 @@ const config = () => {
   };
 };
 
-const getAll = () => {
-  const request = axios.get(baseUrl);
-  return request.then(response => response.data);
+const getAll = async () => {
+  const response = await axios.get(baseUrl);
+  return response.data;
 };
 
 const create = async newObject => {
@@ -21,13 +21,20 @@ const create = async newObject => {
   return response.data;
 };
 
-const update = (id, newObject) => {
-  const request = axios.put(`${baseUrl}/${id}`, newObject);
-  return request.then(response => response.data);
+const update = async (id, newObject) => {
+  const response = await axios.put(`${baseUrl}/${id}`, newObject);
+  return response.data;
 };
 
 const remove = id => {
   return axios.delete(`${baseUrl}/${id}`, config());
 };
 
-export default { getAll, create, update, remove };
+const comment = async (id, comment) => {
+  const response = await axios.post(`${baseUrl}/${id}/comments`, {
+    comment: comment
+  });
+  return response.data;
+};
+
+export default { getAll, create, update, remove, comment };
