@@ -13,7 +13,7 @@ const authSlice = createSlice({
   }
 });
 
-export const initializeUser = () => {
+export const initializeAuth = () => {
   return async dispatch => {
     const userFromStorage = userService.getUser();
     if (userFromStorage) {
