@@ -6,9 +6,9 @@ import authReducer from './reducers/authReducer';
 
 const store = configureStore({
   reducer: {
-    notifications: notificationReducer,
-    blogs: blogReducer,
-    user: authReducer
+    notification: notificationReducer,
+    blog: blogReducer,
+    auth: authReducer
   }
 });
 

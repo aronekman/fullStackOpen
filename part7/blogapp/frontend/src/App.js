@@ -10,7 +10,7 @@ import { initilizeBlogs } from './reducers/blogReducer';
 
 const App = () => {
   const dispatch = useDispatch();
-  const user = useSelector(({ user }) => user);
+  const user = useSelector(({ auth }) => auth);
 
   useEffect(() => {
     dispatch(initilizeBlogs());

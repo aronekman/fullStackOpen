@@ -4,7 +4,7 @@ import Blog from './Blog';
 
 const BlogList = () => {
   const byLikes = (b1, b2) => b2.likes - b1.likes;
-  const blogs = useSelector(({ blogs }) => [...blogs].sort(byLikes));
+  const blogs = useSelector(({ blog }) => [...blog].sort(byLikes));
   return (
     <div id="blogs">
       {blogs.map(blog => (

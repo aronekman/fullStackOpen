@@ -3,8 +3,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 
 const Notification = () => {
-  const notification = useSelector(({ notifications }) =>
-    notifications.length > 0 ? notifications[notifications.length - 1] : null
+  const notification = useSelector(({ notification }) =>
+    notification.length > 0 ? notification[notification.length - 1] : null
   );
 
   if (!notification) return null;
