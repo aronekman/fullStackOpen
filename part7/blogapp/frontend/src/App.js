@@ -5,22 +5,19 @@ import BlogDetails from './components/BlogDetails';
 
 import BlogList from './components/BlogList';
 import LoginForm from './components/LoginForm';
+import NavBar from './components/NavBar';
 import NewBlogForm from './components/NewBlogForm';
 import Notification from './components/Notification';
 import UserDetails from './components/UserDetails';
 import UserList from './components/UserList';
-import { initializeAuth, logOut } from './reducers/authReducer';
-import { initilizeBlogs } from './reducers/blogReducer';
-import { initializeUsers } from './reducers/userReducer';
+import { initializeAuth } from './reducers/authReducer';
 
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector(({ auth }) => auth);
 
   useEffect(() => {
-    dispatch(initilizeBlogs());
     dispatch(initializeAuth());
-    dispatch(initializeUsers());
   }, [dispatch]);
 
   return (
@@ -28,12 +25,8 @@ const App = () => {
       <Notification />
       {user ? (
         <>
-          <h2>Blogs</h2>
-          <div>
-            {user.name} logged in
-            <br />
-            <button onClick={() => dispatch(logOut())}>logout</button>
-          </div>
+          <NavBar user={user} />
+          <h2>Blog app</h2>
           <Routes>
             <Route
               path="/"
@@ -44,9 +37,9 @@ const App = () => {
                 </div>
               }
             />
+            <Route path="/blogs/:id" element={<BlogDetails />} />
             <Route path="/users" element={<UserList />} />
             <Route path="/users/:id" element={<UserDetails />} />
-            <Route path="/blogs/:id" element={<BlogDetails />} />
           </Routes>
         </>
       ) : (

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import blogService from '../services/blogs';
 import { createNotification } from './notificationReducer';
+import { initializeUsers } from './userReducer';
 
 const blogSlice = createSlice({
   name: 'blogs',
@@ -61,6 +62,7 @@ export const deleteBlog = blog => {
         `blog ${blog.title} by ${blog.author} removed succesfully`
       )
     );
+    dispatch(initializeUsers());
   };
 };
 

@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBlog, likeBlog } from '../reducers/blogReducer';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const BlogDetails = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const id = useParams().id;
   const blog = useSelector(({ blog }) => blog.find(b => b.id == id));
   const user = useSelector(({ auth }) => auth);
+
+  useEffect(() => {
+    if (!blog) {
+      navigate('/');
+    }
+  }, []);
 
   if (!blog) return null;
   const { title, author, url, likes } = blog;
@@ -21,6 +28,7 @@ const BlogDetails = () => {
       return;
     }
     dispatch(deleteBlog(blog));
+    navigate('/');
   };
 
   const handleLike = () => {

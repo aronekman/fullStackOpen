@@ -1,10 +1,16 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { initilizeBlogs } from '../reducers/blogReducer';
 
 const BlogList = () => {
+  const dispatch = useDispatch();
   const byLikes = (b1, b2) => b2.likes - b1.likes;
   const blogs = useSelector(({ blog }) => [...blog].sort(byLikes));
+
+  useEffect(() => {
+    dispatch(initilizeBlogs());
+  }, []);
 
   const style = {
     padding: 3,
