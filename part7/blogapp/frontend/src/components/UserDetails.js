@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Box, List, ListSubheader, Typography } from '@mui/material';
 
 const UserDetails = () => {
   const navigate = useNavigate();
@@ -16,15 +17,15 @@ const UserDetails = () => {
   if (!user) return null;
 
   return (
-    <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
-      <div style={{ marginInline: 20 }}>
+    <Box>
+      <Typography variant="h4">{user.name}</Typography>
+      <Typography>added blogs</Typography>
+      <List>
         {user.blogs.map(blog => (
-          <li key={blog.id}>{blog.title}</li>
+          <ListSubheader key={blog.id}>{blog.title}</ListSubheader>
         ))}
-      </div>
-    </div>
+      </List>
+    </Box>
   );
 };
 

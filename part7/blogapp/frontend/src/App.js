@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
+import AppLayout from './AppLayout';
 import BlogDetails from './components/BlogDetails';
 
-import BlogList from './components/BlogList';
+import Blogs from './components/Blogs';
 import LoginForm from './components/LoginForm';
-import NavBar from './components/NavBar';
-import NewBlogForm from './components/NewBlogForm';
 import Notification from './components/Notification';
 import UserDetails from './components/UserDetails';
 import UserList from './components/UserList';
@@ -20,32 +19,26 @@ const App = () => {
     dispatch(initializeAuth());
   }, [dispatch]);
 
+  if (!user)
+    return (
+      <>
+        <Notification />
+        <LoginForm />;
+      </>
+    );
+
   return (
-    <div>
+    <>
       <Notification />
-      {user ? (
-        <>
-          <NavBar user={user} />
-          <h2>Blog app</h2>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <div>
-                  <NewBlogForm />
-                  <BlogList />
-                </div>
-              }
-            />
-            <Route path="/blogs/:id" element={<BlogDetails />} />
-            <Route path="/users" element={<UserList />} />
-            <Route path="/users/:id" element={<UserDetails />} />
-          </Routes>
-        </>
-      ) : (
-        <LoginForm />
-      )}
-    </div>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<Blogs />} />
+          <Route path="/blogs/:id" element={<BlogDetails />} />
+          <Route path="/users" element={<UserList />} />
+          <Route path="/users/:id" element={<UserDetails />} />
+        </Route>
+      </Routes>
+    </>
   );
 };
 

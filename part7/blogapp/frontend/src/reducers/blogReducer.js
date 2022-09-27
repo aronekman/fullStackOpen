@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import blogService from '../services/blogs';
-import { createNotification } from './notificationReducer';
+import { setNotification } from './notificationReducer';
 import { initializeUsers } from './userReducer';
 
 const blogSlice = createSlice({
@@ -37,17 +37,17 @@ export const createBlog = (blog, toggleVisibility) => {
       const newBlog = await blogService.create(blog);
       dispatch(appendBlog(newBlog));
       dispatch(
-        createNotification(
-          `a new blog '${newBlog.title}' by ${newBlog.author} added`
-        )
+        setNotification({
+          message: `a new blog '${newBlog.title}' by ${newBlog.author} added`
+        })
       );
       toggleVisibility();
     } catch (error) {
       dispatch(
-        createNotification(
-          `creating a blog failed: ${error.response.data.error}`,
-          'alert'
-        )
+        setNotification({
+          message: `creating a blog failed: ${error.response.data.error}`,
+          type: 'error'
+        })
       );
     }
   };
@@ -58,9 +58,9 @@ export const deleteBlog = blog => {
     await blogService.remove(blog.id);
     dispatch(removeBlog(blog.id));
     dispatch(
-      createNotification(
-        `blog ${blog.title} by ${blog.author} removed succesfully`
-      )
+      setNotification({
+        message: `blog ${blog.title} by ${blog.author} removed succesfully`
+      })
     );
     dispatch(initializeUsers());
   };
@@ -76,16 +76,16 @@ export const likeBlog = blog => {
       });
       dispatch(updateBlog(updatedBlog));
       dispatch(
-        createNotification(
-          `you liked '${updatedBlog.title}' by ${updatedBlog.author}`
-        )
+        setNotification({
+          message: `you liked '${updatedBlog.title}' by ${updatedBlog.author}`
+        })
       );
     } catch (error) {
       dispatch(
-        createNotification(
-          `liking blog failed: ${error.response.data.error}`,
-          'alert'
-        )
+        setNotification({
+          message: `liking blog failed: ${error.response.data.error}`,
+          type: 'error'
+        })
       );
     }
   };
@@ -98,10 +98,10 @@ export const createComment = (id, comment) => {
       dispatch(updateBlog(updatedBlog));
     } catch (error) {
       dispatch(
-        createNotification(
-          `commenting blog failed: ${error.response.data.error}`,
-          'alert'
-        )
+        setNotification({
+          message: `commenting blog failed: ${error.response.data.error}`,
+          type: 'error'
+        })
       );
     }
   };

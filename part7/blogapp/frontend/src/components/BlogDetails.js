@@ -2,6 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createComment, deleteBlog, likeBlog } from '../reducers/blogReducer';
 import { useParams, useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Button,
+  List,
+  ListSubheader,
+  TextField,
+  Typography
+} from '@mui/material';
 
 const BlogDetails = () => {
   const dispatch = useDispatch();
@@ -39,40 +47,44 @@ const BlogDetails = () => {
   const addComment = event => {
     event.preventDefault();
     dispatch(createComment(id, comment));
+    setComment('');
   };
 
   return (
-    <div>
-      <h2>{title}</h2>
-      <div>
+    <Box>
+      <Typography variant="h4">{title}</Typography>
+      <Button>
         <a href={url}>{url}</a>
-      </div>
-      <div>
-        {likes} likes
-        <button onClick={handleLike}>like</button>
-      </div>
-      added by {addedBy}
-      <br />
+      </Button>
+      <Box>
+        <Typography display="inline">{likes} likes</Typography>
+        <Button variant="contained" onClick={handleLike}>
+          like
+        </Button>
+      </Box>
+      <Typography>added by {addedBy}</Typography>
       {user?.username === blog.user?.username && (
-        <button onClick={handleRemove}>remove</button>
+        <Button color="error" variant="contained" onClick={handleRemove}>
+          remove
+        </Button>
       )}
-      <h4>Comments</h4>
-      <form onSubmit={addComment}>
-        <input
+      <Typography variant="h4">Comments</Typography>
+      <Box display="flex">
+        <TextField
           value={comment}
           onChange={({ target }) => setComment(target.value)}
           id="comment"
         />
-        <button id="add-comment" type="submit">
+        <Button variant="contained" onClick={addComment}>
           add comment
-        </button>
-      </form>
-      <div style={{ marginInline: 20 }}>
+        </Button>
+      </Box>
+      <List>
         {comments.map((comment, index) => (
-          <li key={index}>{comment}</li>
+          <ListSubheader key={index}>{comment}</ListSubheader>
         ))}
-      </div>
-    </div>
+      </List>
+    </Box>
   );
 };
 

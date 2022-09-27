@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import loginService from '../services/login';
 import userService from '../services/user';
-import { createNotification } from './notificationReducer';
+import { setNotification } from './notificationReducer';
 
 const authSlice = createSlice({
   name: 'auth',
@@ -28,9 +28,11 @@ export const login = (username, password) => {
       const user = await loginService.login({ username, password });
       userService.setUser(user);
       dispatch(setUser(user));
-      dispatch(createNotification(`${user.name} logged in!`));
+      dispatch(setNotification({ message: `${user.name} logged in!` }));
     } catch (error) {
-      dispatch(createNotification('wrong username/password', 'alert'));
+      dispatch(
+        setNotification({ message: 'wrong username/password', type: 'error' })
+      );
     }
   };
 };
@@ -39,7 +41,7 @@ export const logOut = () => {
   return async dispatch => {
     dispatch(setUser(null));
     userService.clearUser();
-    dispatch(createNotification('good bye!'));
+    dispatch(setNotification({ message: 'good bye!' }));
   };
 };
 

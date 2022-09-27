@@ -1,3 +1,4 @@
+import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../reducers/authReducer';
@@ -6,39 +7,40 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [fieldsError, setFieldsError] = useState(false);
 
   const handleSubmit = event => {
     event.preventDefault();
-    dispatch(login(username, password));
+    if (username && password) {
+      dispatch(login(username, password));
+    } else {
+      setFieldsError(true);
+    }
   };
 
   return (
-    <div>
-      <h2>Log in to application</h2>
-
+    <Box display="flex" justifyContent="center">
       <form onSubmit={handleSubmit}>
-        <div>
-          username
-          <input
-            value={username}
+        <Stack spacing={2}>
+          <Typography variant="h2">Log in to application</Typography>
+          <TextField
+            type="text"
+            label="username"
             onChange={({ target }) => setUsername(target.value)}
-            id="username"
+            error={username === '' && fieldsError}
           />
-        </div>
-        <div>
-          password
-          <input
+          <TextField
             type="password"
-            value={password}
+            label="password"
             onChange={({ target }) => setPassword(target.value)}
-            id="password"
+            error={password === '' && fieldsError}
           />
-        </div>
-        <button id="login-button" type="submit">
-          login
-        </button>
+          <Button type="submit" variant="contained">
+            login
+          </Button>
+        </Stack>
       </form>
-    </div>
+    </Box>
   );
 };
 

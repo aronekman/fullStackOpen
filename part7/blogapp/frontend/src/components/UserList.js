@@ -1,3 +1,12 @@
+import {
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -12,27 +21,27 @@ const UserList = () => {
   });
 
   return (
-    <div>
-      <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th />
-            <th>blogs created</th>
-          </tr>
-        </thead>
-        <tbody>
+    <Box maxWidth="sm">
+      <Typography variant="h4">Users</Typography>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell />
+            <TableCell>blogs created</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {users.map(user => (
-            <tr key={user.id}>
-              <td>
+            <TableRow key={user.id}>
+              <TableCell>
                 <Link to={user.id}>{user.name}</Link>
-              </td>
-              <td>{user.blogs.length}</td>
-            </tr>
+              </TableCell>
+              <TableCell>{user.blogs.length}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </Box>
   );
 };
 

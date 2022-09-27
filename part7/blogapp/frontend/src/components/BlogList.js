@@ -1,3 +1,4 @@
+import { Table, TableBody, TableRow, TableCell, Button } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -12,22 +13,30 @@ const BlogList = () => {
     dispatch(initilizeBlogs());
   }, []);
 
-  const style = {
-    padding: 3,
-    marginBlock: 5,
-    borderStyle: 'solid',
-    borderWidth: 1
-  };
   return (
-    <div id="blogs">
-      {blogs.map(blog => (
-        <div key={blog.id} style={style}>
-          <Link to={`blogs/${blog.id}`}>
-            {blog.title} {blog.author}
-          </Link>
-        </div>
-      ))}
-    </div>
+    <Table>
+      <TableBody>
+        {blogs.map(blog => (
+          <TableRow key={blog.id}>
+            <TableCell>
+              <Link
+                to={`blogs/${blog.id}`}
+                style={{
+                  minWidth: '100%',
+                  minHeight: '100%',
+                  color: 'inherit',
+                  textDecoration: 'inherit'
+                }}
+              >
+                <Button>
+                  {blog.title} {blog.author}
+                </Button>
+              </Link>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 };
 

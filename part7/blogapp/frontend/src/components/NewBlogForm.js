@@ -1,3 +1,4 @@
+import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBlog } from '../reducers/blogReducer';
@@ -20,46 +21,42 @@ const NewBlogForm = () => {
   };
 
   if (!visible) {
-    return <button onClick={() => setVisible(true)}>new note</button>;
+    return (
+      <Button variant="contained" onClick={() => setVisible(true)}>
+        new note
+      </Button>
+    );
   }
 
   return (
-    <div>
-      <h2 style={{ marginBlock: 5 }}>Create new</h2>
+    <Box maxWidth="sm" marginBottom={2}>
+      <Typography marginBottom={1} variant="h5">
+        Create new
+      </Typography>
       <form onSubmit={handleSubmit}>
-        <div>
-          title
-          <input
+        <Stack spacing={2}>
+          <TextField
+            label="title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
-            id="title"
-            placeholder="title of the blog"
           />
-        </div>
-        <div>
-          author
-          <input
+          <TextField
+            label="author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
-            id="author"
-            placeholder="author of the blog"
           />
-        </div>
-        <div>
-          url
-          <input
+          <TextField
+            label="url"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
-            id="url"
-            placeholder="url of the blog"
           />
-        </div>
-        <button id="create-butto" type="submit">
-          create
-        </button>
+          <Button variant="contained" type="submit">
+            create
+          </Button>
+          <Button onClick={() => setVisible(false)}>cancel</Button>
+        </Stack>
       </form>
-      <button onClick={() => setVisible(false)}>cancel</button>
-    </div>
+    </Box>
   );
 };
 
