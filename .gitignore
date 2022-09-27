@@ -20,7 +20,7 @@ yarn-debug.log*
 yarn-error.log*
 
 /.eslintrc.js
-.prettierrc
+/.prettierrc
 .env
 
 .vscode
