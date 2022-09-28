@@ -29,6 +29,7 @@ const typeDefs = gql`
   type Author {
     name: String!
     born: Int
+    bookCount: Int!
   }
 
   type Query {
@@ -53,8 +54,21 @@ const resolvers = {
   Query: {
     bookCount: () => Book.collection.countDocuments(),
     authorCount: () => Author.collection.countDocuments(),
-    allBooks: async (root, args) => Book.find({}),
+    allBooks: async (root, args) => {
+      const filter = {};
+      if (args.author) {
+        const author = await Author.findOne({ name: args.author });
+        filter.author = author?.id;
+      }
+      if (args.genre) {
+        filter.genres = { $in: args.genre };
+      }
+      return Book.find(filter).populate('author');
+    },
     allAuthors: async () => Author.find({})
+  },
+  Author: {
+    bookCount: async root => Book.countDocuments({ author: root.id })
   },
   Mutation: {
     addBook: async (root, args) => {
@@ -79,13 +93,12 @@ const resolvers = {
       }
       return book;
     },
-    editAuthor: (root, args) => {
-      const index = authors.findIndex(author => author.name === args.name);
-      if (index == -1) return null;
-      const newAuthor = { ...authors[index], born: args.setBornTo };
-      authors.splice(index, 1, newAuthor);
-      return newAuthor;
-    }
+    editAuthor: async (root, args) =>
+      Author.findOneAndUpdate(
+        { name: args.name },
+        { born: args.setBornTo },
+        { new: true }
+      )
   }
 };
 
