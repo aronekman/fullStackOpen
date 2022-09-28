@@ -142,7 +142,7 @@ const resolvers = {
     },
     editAuthor: (root, args) => {
       const index = authors.findIndex(author => author.name === args.name);
-      if (!index) return null;
+      if (index == -1) return null;
       const newAuthor = { ...authors[index], born: args.setBornTo };
       authors.splice(index, 1, newAuthor);
       return newAuthor;
