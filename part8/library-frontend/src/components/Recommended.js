@@ -3,32 +3,20 @@ import React, { useEffect, useState } from 'react';
 import { ALL_BOOKS, ME } from '../queries';
 
 const Recommended = ({ show }) => {
-  const user = useQuery(ME);
-  const books = useQuery(ALL_BOOKS);
   const [favoriteGenre, setFavoriteGenre] = useState(null);
   const [bookList, setBookList] = useState([]);
+  const user = useQuery(ME);
+  const books = useQuery(ALL_BOOKS, {
+    variables: { genre: favoriteGenre },
+    skip: !favoriteGenre
+  });
   useEffect(() => {
-    if (user.loading) {
-      setFavoriteGenre(null);
-      return;
-    }
-    setFavoriteGenre(user.data.me.favouriteGenre);
+    setFavoriteGenre(user.data?.me?.favouriteGenre ?? null);
   }, [user.data?.me.favouriteGenre, user.loading]);
 
   useEffect(() => {
-    if (books.loading) {
-      setBookList([]);
-      return;
-    }
-    if (favoriteGenre) {
-      setBookList(
-        books.data.allBooks.filter(b => b.genres.includes(favoriteGenre))
-      );
-      return;
-    }
-    setBookList([]);
-  }, [books.data?.allBooks, books.loading, favoriteGenre]);
-  useEffect(() => {}, []);
+    setBookList(books.data?.allBooks ?? []);
+  }, [books.data?.allBooks, books.loading]);
 
   if (!show) return null;
 
