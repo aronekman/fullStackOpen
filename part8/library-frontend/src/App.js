@@ -22,6 +22,10 @@ const App = () => {
     }
   }, [token]);
 
+  useEffect(() => {
+    setToken(localStorage.getItem('library-user-token'));
+  }, []);
+
   return (
     <div>
       <div>
@@ -37,7 +41,7 @@ const App = () => {
         )}
       </div>
 
-      <Authors show={page === 'authors'} token />
+      <Authors show={page === 'authors'} token={token} />
 
       <Books show={page === 'books'} />
 
