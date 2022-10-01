@@ -12,8 +12,6 @@ const Books = props => {
     fetchPolicy: 'no-cache'
   });
 
-  console.log(result);
-
   useEffect(() => {
     setBookList(result.data?.allBooks ?? []);
   }, [genre, result.data?.allBooks, result.loading]);

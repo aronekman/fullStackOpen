@@ -12,7 +12,7 @@ const Recommended = ({ show }) => {
   });
   useEffect(() => {
     setFavoriteGenre(user.data?.me?.favouriteGenre ?? null);
-  }, [user.data?.me.favouriteGenre, user.loading]);
+  }, [user.data?.me?.favouriteGenre, user.loading]);
 
   useEffect(() => {
     setBookList(books.data?.allBooks ?? []);
