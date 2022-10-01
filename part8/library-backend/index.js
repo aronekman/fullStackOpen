@@ -8,8 +8,8 @@ const mongoose = require('mongoose');
 const User = require('./models/user');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
-const { execute, subscribe } = require('graphql');
-const { SubscriptionServer } = require('graphql-ws');
+const { useServer } = require('graphql-ws/lib/use/ws');
+const { WebSocketServer } = require('ws');
 require('dotenv').config();
 
 console.log('connecting to', process.env.MONGODB_URI);

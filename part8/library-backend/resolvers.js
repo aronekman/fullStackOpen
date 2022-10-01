@@ -3,7 +3,10 @@ const jwt = require('jsonwebtoken');
 const Author = require('./models/author');
 const Book = require('./models/book');
 const User = require('./models/user');
+const { PubSub } = require('graphql-subscriptions');
 require('dotenv').config();
+
+const pubsub = new PubSub();
 
 const resolvers = {
   Query: {
@@ -99,7 +102,9 @@ const resolvers = {
     }
   },
   Subscription: {
-    bookAdded: () => pubsub.asyncIterator('BOOK_ADDED')
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator('BOOK_ADDED')
+    }
   }
 };
 
