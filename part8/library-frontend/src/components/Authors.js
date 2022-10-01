@@ -3,7 +3,7 @@ import Select from 'react-select';
 import { useMutation, useQuery } from '@apollo/client';
 import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries';
 
-const Authors = props => {
+const Authors = ({ show, token }) => {
   const [name, setName] = useState('');
   const [born, setBorn] = useState(null);
 
@@ -21,7 +21,7 @@ const Authors = props => {
     setBorn(null);
   };
 
-  if (!props.show) {
+  if (!show) {
     return null;
   }
 
@@ -46,30 +46,34 @@ const Authors = props => {
           ))}
         </tbody>
       </table>
-      <h2>Set birthyear</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <Select
-            label="name"
-            value={name ? { value: name, label: name } : null}
-            onChange={option => setName(option.value)}
-            options={result.data.allAuthors.map(option => {
-              return { value: option.name, label: option.name };
-            })}
-          />
-        </div>
-        <div>
-          born
-          <input
-            type="number"
-            value={born ?? ''}
-            onChange={({ target }) =>
-              setBorn(target.value ? parseInt(target.value) : null)
-            }
-          />
-        </div>
-        <button type="submit">update author</button>
-      </form>
+      {token && (
+        <>
+          <h2>Set birthyear</h2>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <Select
+                label="name"
+                value={name ? { value: name, label: name } : null}
+                onChange={option => setName(option.value)}
+                options={result.data.allAuthors.map(option => {
+                  return { value: option.name, label: option.name };
+                })}
+              />
+            </div>
+            <div>
+              born
+              <input
+                type="number"
+                value={born ?? ''}
+                onChange={({ target }) =>
+                  setBorn(target.value ? parseInt(target.value) : null)
+                }
+              />
+            </div>
+            <button type="submit">update author</button>
+          </form>
+        </>
+      )}
     </div>
   );
 };
