@@ -8,20 +8,18 @@ const Books = props => {
   const [genreList, setGenreList] = useState([]);
   const allGenres = useQuery(ALL_GENRES);
   const result = useQuery(ALL_BOOKS, {
-    variables: { genre }
+    variables: { genre },
+    fetchPolicy: 'no-cache'
   });
 
+  console.log(result);
+
   useEffect(() => {
-    if (result.loading) {
-      setBookList([]);
-      return;
-    }
-    setBookList(result.data.allBooks);
+    setBookList(result.data?.allBooks ?? []);
   }, [genre, result.data?.allBooks, result.loading]);
 
   useEffect(() => {
-    if (allGenres.loading) return;
-    setGenreList(allGenres.data.allGenres);
+    setGenreList(allGenres.data?.allGenres ?? []);
   }, [allGenres.data?.allGenres, allGenres.loading]);
 
   if (!props.show) {
