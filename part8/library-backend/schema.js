@@ -45,7 +45,7 @@ const typeDefs = gql`
     login(username: String!, password: String!): Token
   }
 
-  type Subscrition {
+  type Subscription {
     bookAdded: [Book!]!
   }
 `;
