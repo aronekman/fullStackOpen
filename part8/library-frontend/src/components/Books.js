@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { ALL_BOOKS, ALL_GENRES } from '../queries';
+import { useQuery, useSubscription } from '@apollo/client';
+import { ALL_BOOKS, ALL_GENRES, BOOK_ADDED } from '../queries';
 
 const Books = props => {
   const [genre, setGenre] = useState(null);
@@ -19,6 +19,12 @@ const Books = props => {
   useEffect(() => {
     setGenreList(allGenres.data?.allGenres ?? []);
   }, [allGenres.data?.allGenres, allGenres.loading]);
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      window.alert(subscriptionData.data.bookAdded.title);
+    }
+  });
 
   if (!props.show) {
     return null;
@@ -40,11 +46,11 @@ const Books = props => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {bookList.map(a => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
+          {bookList.map(b => (
+            <tr key={b.id}>
+              <td>{b.title}</td>
+              <td>{b.author.name}</td>
+              <td>{b.published}</td>
             </tr>
           ))}
         </tbody>
