@@ -13,9 +13,9 @@ const getRating = (average: number, target: number): number => {
 };
 
 const getDescription = (rating: number): string => {
-  if (rating > 2) return 'very good';
+  if (rating > 2) return 'good';
   if (rating > 1) return 'not too bad but could be better';
-  return 'very bad';
+  return 'bad';
 };
 
 const calculateExercises = (
@@ -70,3 +70,5 @@ try {
   }
   console.log(errorMessage);
 }
+
+export default calculateExercises;
