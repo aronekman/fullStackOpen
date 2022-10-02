@@ -22,6 +22,7 @@ yarn-error.log*
 /.eslintrc.js
 /.prettierrc
 .env
+build
 
 .vscode
 **/coverage
