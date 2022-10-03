@@ -1,6 +1,6 @@
-import { patientEntry } from '../src/types';
+import { PatientEntry } from '../src/types';
 
-const patientEntries: patientEntry[] = [
+const patientEntries: PatientEntry[] = [
   {
     id: 'd2773336-f723-11e9-8f0b-362b9e155667',
     name: 'John McClane',
