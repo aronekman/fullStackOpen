@@ -5,11 +5,7 @@ interface TotalProps {
 }
 
 const Total = ({ total }: TotalProps) => {
-  return (
-    <>
-      <p>Number of exercises</p> <p>{total}</p>
-    </>
-  );
+  return <div> Number of exercises {total} </div>;
 };
 
 export default Total;
